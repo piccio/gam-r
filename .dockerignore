@@ -1,0 +1,6 @@
+# Rubymine IDE
+.idea
+# git files
+.git*
+# local files
+README.md
