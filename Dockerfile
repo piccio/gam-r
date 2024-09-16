@@ -31,7 +31,7 @@ RUN apt update && apt install -y \
     curl \
     xz-utils \
     less \
-    vim \
+    vim
 ### get gam
 # curl options:
 #   -s, --silent
