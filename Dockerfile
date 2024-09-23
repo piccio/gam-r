@@ -85,6 +85,7 @@ RUN gam config no_browser true save
 # creates a mount point with the specified name and marks it as holding externally mounted volumes
 #   from native host or other containers.
 VOLUME [".gam"]
+VOLUME ["Downloads"]
 
 # ENTRYPOINT ["executable", "param1", "param2"]
 # configures a container that will run as an executable

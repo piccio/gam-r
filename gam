@@ -4,6 +4,7 @@ GAM_USER=$(docker run --rm -it --entrypoint '' gam whoami | tr -d '[:space:]' )
 
 docker run --rm -it \
   -v gam_cfg_dir:/home/"${GAM_USER}"/.gam \
+  -v gam_drive_dir:/home/"${GAM_USER}"/Downloads \
   --name gam \
   gam \
   "$@"
