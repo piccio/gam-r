@@ -16,19 +16,30 @@ then [run](https://docs.docker.com/engine/containers/run/) a container based on 
 
 ## Setup
 
-```bash
-git clone url path
-```
+Get the _dockerfile_ and the _gam_ executable.<br>
+The _gam_ executable is a shortcut and its purpose is to hide the complexity of the _docker_ layer.
 
 ```bash
+git clone url path
 cd path
+```
+
+Build the image from the _Dockerfile_.
+
+```bash
 docker build -t gam .
 ```
+
+Link the _gam_ executable of the project to a host path of your choice (i.e. _gam-r_).
 
 ```bash
 sudo ln -s $PWD/gam /usr/local/bin/gam-r
 ```
 
+Check that it works regularly.
+
 ```bash
 gam-r version
 ```
+
+will probably respond with a warning message saying that _gam_ is not configured.
