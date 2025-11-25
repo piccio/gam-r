@@ -1,6 +1,6 @@
 # FROM [--platform=<platform>] <image>[:<tag>] [AS <name>]
 # initializes a new build stage and sets the base image for subsequent instructions
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 # LABEL <key>=<value> <key>=<value> <key>=<value> ...
 # adds metadata to an image
@@ -15,11 +15,12 @@ ARG USER=gam
 # sets the environment variable <key> to the value <value>
 #   The environment variables set using ENV will persist when a container is run from the resulting image
 ENV HOME=/home/$USER
-ENV GAM_URL=https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh
-ENV GAM_INSTALLER=$HOME/gamadv-install
-ENV GAM_PATH=$HOME/bin/gamadv-xtd3/gam
-#ENV GAM_WORK=$HOME/gam_work
-#ENV GAMCFGDIR=$HOME/.gam
+ENV GAM_INSTALLER=$HOME/gam-install
+ENV GAMDRIVEDIR=$HOME/Download
+#ENV GAMDRIVEDIR=$HOME/gam_work
+ENV GAMCFGDIR=$HOME/.gam
+#ENV GAMCFGDIR=$HOME/gam_config
+ENV BASH_CONFIG_FILE=$HOME/.bashrc
 
 # RUN [OPTIONS] <command> ...
 # execute any commands to create a new layer on top of the current image.
@@ -42,16 +43,23 @@ RUN apt update && apt install -y \
 #   -L, --location
 #     (HTTP) If the server reports that the requested page has moved to a different location,
 #       this option makes curl redo the request on the new place.
-RUN curl -s -S -L -o $GAM_INSTALLER $GAM_URL
+#   -o, --output <file>
+#     Write output to <file> instead of stdout.
+RUN curl -s -S -L -o $GAM_INSTALLER https://gam-shortn.appspot.com/gam-install
 RUN chown $USER $GAM_INSTALLER
 RUN chmod 700 $GAM_INSTALLER
-### set a configuration directory (https://github.com/taers232c/GAMADV-XTD3/wiki/How-to-Install-Advanced-GAM#set-a-configuration-directory)
-#RUN mkdir $GAMCFGDIR
-#RUN chown $USER $GAMCFGDIR
-#RUN echo "export GAMCFGDIR=$GAMCFGDIR" > .bashrc
-### Set a working directory (https://github.com/taers232c/GAMADV-XTD3/wiki/How-to-Install-Advanced-GAM#set-a-working-directory)
-#RUN mkdir $GAM_WORK
-#RUN chown $USER $GAM_WORK
+### set a configuration directory (https://github.com/GAM-team/GAM/wiki/How-to-Install-GAM7#set-a-configuration-directory)
+RUN mkdir $GAMCFGDIR
+RUN chown $USER $GAMCFGDIR
+RUN echo "export GAMCFGDIR=$GAMCFGDIR" >> $BASH_CONFIG_FILE
+### Set a working directory (https://github.com/GAM-team/GAM/wiki/How-to-Install-GAM7#set-a-working-directory)
+RUN mkdir $GAMDRIVEDIR
+RUN chown $USER $GAMDRIVEDIR
+RUN echo "export GAMDRIVEDIR=$GAMDRIVEDIR" >> $BASH_CONFIG_FILE
+# The default shell on Linux is sh so use the dot operator in place of source,
+#   which is the sh equivalent of the bash source command
+#RUN source $BASH_CONFIG_FILE
+RUN . $BASH_CONFIG_FILE
 
 # USER <user>[:<group>]
 # sets the user name (or UID) and optionally the user group (or GID) to use as the default user and group for
@@ -70,22 +78,22 @@ WORKDIR $HOME
 #RUN ( while true ; do echo "no" ; done ) | $GAM_INSTALLER
 ### do it better (and KISS) :-)
 RUN $GAM_INSTALLER -l
-### set a symlink (https://github.com/taers232c/GAMADV-XTD3/wiki/How-to-Install-Advanced-GAM#set-a-symlink)
+### set a symlink (https://github.com/GAM-team/GAM/wiki/How-to-Install-GAM7#set-a-symlink)
 USER root
-RUN ln -s $GAM_PATH /usr/local/bin/gam
+RUN ln -s $HOME/bin/gam7/gam /usr/local/bin/gam
 USER $USER
-### Initialize GAMADV-XTD3; this should be the first GAMADV-XTD3 command executed
-###   (https://github.com/taers232c/GAMADV-XTD3/wiki/How-to-Install-Advanced-GAM#initialize-gamadv-xtd3-this-should-be-the-first-gamadv-xtd3-command-executed)
-#RUN gam config drive_dir $GAM_WORK verify
+### Initialize GAM7; this should be the first GAM7 command executed
+###   (https://github.com/GAM-team/GAM/wiki/How-to-Install-GAM7#initialize-gam7-this-should-be-the-first-gam7-command-executed)
+RUN gam config drive_dir $GAMDRIVEDIR verify
 ### set gam to be configured without local browser
-###  (https://github.com/taers232c/GAMADV-XTD3/wiki/How-to-Install-Advanced-GAM#create-your-project-without-local-browser-google-cloud-shell-for-instance)
+###  (https://github.com/GAM-team/GAM/wiki/How-to-Install-GAM7#create-your-project-without-local-browser-google-cloud-shell-for-instance)
 RUN gam config no_browser true save
 
 # VOLUME ["/data"]
 # creates a mount point with the specified name and marks it as holding externally mounted volumes
 #   from native host or other containers.
-VOLUME [".gam"]
-VOLUME ["Downloads"]
+VOLUME ["$GAMCFGDIR"]
+VOLUME ["$GAMDRIVEDIR"]
 
 # ENTRYPOINT ["executable", "param1", "param2"]
 # configures a container that will run as an executable

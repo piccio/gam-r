@@ -4,17 +4,14 @@ GAM in a containeR
 
 ## Intro
 
-### GAM / GAMADV
+### GAM
 
-GAMADV-XTD3 is a free, open source CLI (command line tool) to manage Google Workspace.
-
-GAMADV-XTD3 is a rewrite/extension of Jay Lee's [GAM](https://github.com/jay0lee/GAM/)
+[GAM](https://github.com/GAM-team/GAM) GAM is a command line tool for Google Workspace admins to manage domain and user settings quickly and easily.
 
 ### Executable container
 
-Docker is a tool to easily deploy applications in a sandbox, called containers.
-
-Build a container image that will [run as an executable](https://docs.docker.com/reference/dockerfile/#entrypoint), 
+[Docker](https://www.docker.com/) is a tool to easily deploy applications in a sandbox, called containers.<br>
+A possible use case is executable container: build a container image that will [run as an executable](https://docs.docker.com/reference/dockerfile/#entrypoint), 
 then [run](https://docs.docker.com/engine/containers/run/) a container based on this image.
 
 ## Setup
