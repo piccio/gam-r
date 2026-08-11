@@ -1,2 +1,5 @@
 # Rubymine IDE
 .idea
+
+# mac files
+**/.DS_Store
