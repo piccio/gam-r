@@ -16,7 +16,7 @@ ARG USER=gam
 #   The environment variables set using ENV will persist when a container is run from the resulting image
 ENV HOME=/home/$USER
 ENV GAM_INSTALLER=$HOME/gam-install
-ENV GAMDRIVEDIR=$HOME/Download
+ENV GAMDRIVEDIR=$HOME/Downloads
 #ENV GAMDRIVEDIR=$HOME/gam_work
 ENV GAMCFGDIR=$HOME/.gam
 #ENV GAMCFGDIR=$HOME/gam_config
